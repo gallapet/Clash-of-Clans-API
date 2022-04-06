@@ -7,7 +7,7 @@ headers = {
     "authorization" : f"{auth.read()}"
 }
 
-def getAccountInfo():
+def get_account_information():
     # Return info about user account
     playerTag = input("Enter your player tag (without the #, not case sensitive): ").upper() #"LC22V09C9" #"9LR9QY98"  # 
     url = "https://api.clashofclans.com/v1/players/%23" + playerTag
@@ -28,13 +28,13 @@ def getAccountInfo():
             names.append(hero_name)
     
     return {
-        "player_name" : player_name,
-        "th_level" : th_level,
-        "levels" : levels,
-        "names" : names
+        "player_name": player_name,
+        "th_level": th_level,
+        "levels": levels,
+        "names": names
         }
 
-results = getAccountInfo()
+results = get_account_information()
 print('==========================================================================')
 print("Hello " + results.get("player_name") + "!")
 print("Your Town Hall Level is " + results.get("th_level"))
