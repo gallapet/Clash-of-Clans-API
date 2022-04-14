@@ -9,9 +9,8 @@ headers = {
 
 def get_account_information():
     # Return info about user account
-    # playerTag = input("Enter your player tag (without the #, not case sensitive): ").upper() #"LC22V09C9" #"9LR9QY98"  #
-    playerTag = "9lr9qy98".upper()
-    url = "https://api.clashofclans.com/v1/players/%23" + playerTag
+    player_tag = input("Enter your player tag (without the #, not case sensitive): ").upper() #"LC22V09C9" #"9LR9QY98"  #
+    url = "https://api.clashofclans.com/v1/players/%23" + player_tag
 
     request = requests.get(url, headers=headers)
     json = request.json()
