@@ -44,28 +44,28 @@ def print_output():
 def account_information():
     # Return info about user account
     # player_tag = input("Enter your player tag (without the #, not case sensitive): ").upper() #"LC22V09C9" #"9LR9QY98"  #
-    url = "https://api.clashofclans.com/v1/players/%23LC22V09C9"
+    url = "https://api.clashofclans.com/v1/players/%239LR9QY98"
 
     request = requests.get(url, headers=headers)
-    json = request.json()
+    response = request.json()
 
-    player_name = json.get("name")
-    th_level = str(json.get("townHallLevel"))
+    player_name = response.get("name")
+    th_level = str(response.get("townHallLevel"))
     
     hero_levels = []
     hero_names = []
-    for i in range(len(json.get("heroes"))):
-        hero_level = str(json.get("heroes")[i].get("level"))
-        hero_name = json.get("heroes")[i].get("name")
-        if json.get("heroes")[i].get("village") == "home":
+    for i in range(len(response.get("heroes"))):
+        hero_level = str(response.get("heroes")[i].get("level"))
+        hero_name = response.get("heroes")[i].get("name")
+        if response.get("heroes")[i].get("village") == "home":
             hero_levels.append(hero_level)
             hero_names.append(hero_name)
 
     pet_names = ["L.A.S.S.I", "Mighty Yak", "Electro Owl", "Unicorn"]
     pet_levels = []
-    for j in range(len(json.get("troops"))):
-        if json.get("troops")[j].get("name") in pet_names:
-            pet_levels.append(str(json.get("troops")[j].get("level")))
+    for j in range(len(response.get("troops"))):
+        if response.get("troops")[j].get("name") in pet_names:
+            pet_levels.append(str(response.get("troops")[j].get("level")))
     
     return {
         "player_name": player_name,
