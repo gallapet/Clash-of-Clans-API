@@ -7,10 +7,35 @@ headers = {
     "authorization" : f"{auth.read()}"
 }
 
-def get_account_information():
+def print_player_info():
+    print("Hello " + account_information().get("player_name") + "!")
+    print("Your Town Hall Level is " + account_information().get("th_level"))
+    print("")
+
+def print_player_heroes():
+    print("You have " + str(len(account_information().get("hero_levels"))) + " heroes.")
+    for i in range(len(account_information().get("hero_levels"))):
+        print("Your " + account_information().get("hero_names")[i] + " is currently Level " + account_information().get("hero_levels")[i])
+    print("")
+
+def print_player_pets():
+    if len(account_information().get("pet_levels")) == 0:
+        print("You currently have no pets, upgrade to TH14 to unlock!")
+    else:
+        print("You also have " + str(len(account_information().get("pet_levels"))) + " pets.")
+        for j in range(len(account_information().get("pet_levels"))):
+            print("Your " + account_information().get("pet_names")[j] + " is currently Level " + account_information().get("pet_levels")[j])
+
+def print_output():
+    print('==========================================================================')
+    print_player_info()
+    print_player_heroes()
+    print_player_pets()
+
+def account_information():
     # Return info about user account
-    player_tag = input("Enter your player tag (without the #, not case sensitive): ").upper() #"LC22V09C9" #"9LR9QY98"  #
-    url = "https://api.clashofclans.com/v1/players/%23" + player_tag
+    # player_tag = input("Enter your player tag (without the #, not case sensitive): ").upper() #"LC22V09C9" #"9LR9QY98"  #
+    url = "https://api.clashofclans.com/v1/players/%239LR9QY98"
 
     request = requests.get(url, headers=headers)
     json = request.json()
@@ -32,7 +57,6 @@ def get_account_information():
     for j in range(len(json.get("troops"))):
         if json.get("troops")[j].get("name") in pet_names:
             pet_levels.append(str(json.get("troops")[j].get("level")))
-        # pet_names.append(json.get("pets")[j].get("name"))
     
     return {
         "player_name": player_name,
@@ -43,19 +67,8 @@ def get_account_information():
         "pet_names": pet_names
         }
 
-results = get_account_information()
-print('==========================================================================')
-print("Hello " + results.get("player_name") + "!")
-print("Your Town Hall Level is " + results.get("th_level"))
-print("")
-print("You have " + str(len(results.get("hero_levels"))) + " heroes.")
-for i in range(len(results.get("hero_levels"))):
-    print("Your " + results.get("hero_names")[i] + " is currently Level " + results.get("hero_levels")[i])
-print("")
+print_output()
 
-if len(results.get("pet_levels")) == 0:
-    print("You currently have no pets, upgrade to TH14 to unlock!")
-else:
-    print("You also have " + str(len(results.get("pet_levels"))) + " pets.")
-    for j in range(len(results.get("pet_levels"))):
-        print("Your " + results.get("pet_names")[j] + " is currently Level " + results.get("pet_levels")[j])
+
+
+
