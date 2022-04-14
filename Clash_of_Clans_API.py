@@ -13,7 +13,16 @@ def print_player_info():
     print("")
 
 def print_player_heroes():
-    print("You have " + str(len(result.get("hero_levels"))) + " heroes.")
+    if len(result.get("hero_levels")) == 0:
+        print("You do not have any heroes! Upgrade to  TH7 to unlock the Barbarian King!")
+    elif len(result.get("hero_levels")) == 1:
+        print("You have 1 hero! Upgrade to TH9 to unlock the Archer Queen!")
+    elif len(result.get("hero_levels")) == 2:
+        print("You have 2 heroes! Upgrade to TH11 to unlock the Grand Warden!")
+    elif len(result.get("hero_levels")) == 3:
+        print("You have 3 heroes! Upgrade to TH13 to unlock the Royal Champion!")
+    else:
+        print("You have 4 heroes!")
     for i in range(len(result.get("hero_levels"))):
         print("Your " + result.get("hero_names")[i] + " is currently Level " + result.get("hero_levels")[i])
     print("")
@@ -35,7 +44,7 @@ def print_output():
 def account_information():
     # Return info about user account
     # player_tag = input("Enter your player tag (without the #, not case sensitive): ").upper() #"LC22V09C9" #"9LR9QY98"  #
-    url = "https://api.clashofclans.com/v1/players/%239LR9QY98"
+    url = "https://api.clashofclans.com/v1/players/%23LC22V09C9"
 
     request = requests.get(url, headers=headers)
     json = request.json()
