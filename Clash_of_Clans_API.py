@@ -8,23 +8,23 @@ headers = {
 }
 
 def print_player_info():
-    print("Hello " + account_information().get("player_name") + "!")
-    print("Your Town Hall Level is " + account_information().get("th_level"))
+    print("Hello " + result.get("player_name") + "!")
+    print("Your Town Hall Level is " + result.get("th_level"))
     print("")
 
 def print_player_heroes():
-    print("You have " + str(len(account_information().get("hero_levels"))) + " heroes.")
-    for i in range(len(account_information().get("hero_levels"))):
-        print("Your " + account_information().get("hero_names")[i] + " is currently Level " + account_information().get("hero_levels")[i])
+    print("You have " + str(len(result.get("hero_levels"))) + " heroes.")
+    for i in range(len(result.get("hero_levels"))):
+        print("Your " + result.get("hero_names")[i] + " is currently Level " + result.get("hero_levels")[i])
     print("")
 
 def print_player_pets():
-    if len(account_information().get("pet_levels")) == 0:
+    if len(result.get("pet_levels")) == 0:
         print("You currently have no pets, upgrade to TH14 to unlock!")
     else:
-        print("You also have " + str(len(account_information().get("pet_levels"))) + " pets.")
-        for j in range(len(account_information().get("pet_levels"))):
-            print("Your " + account_information().get("pet_names")[j] + " is currently Level " + account_information().get("pet_levels")[j])
+        print("You also have " + str(len(result.get("pet_levels"))) + " pets.")
+        for j in range(len(result.get("pet_levels"))):
+            print("Your " + result.get("pet_names")[j] + " is currently Level " + result.get("pet_levels")[j])
 
 def print_output():
     print('==========================================================================')
@@ -67,8 +67,6 @@ def account_information():
         "pet_names": pet_names
         }
 
+result = account_information()
+
 print_output()
-
-
-
-
