@@ -46,7 +46,7 @@ def print_output():
 def account_information():
     """Return info about user account"""
     # player_tag = input("Enter your player tag (without the #, not case sensitive): ").upper() #"LC22V09C9" #"9LR9QY98"  #
-    url = "https://api.clashofclans.com/v1/players/%23lc22v09c9"
+    url = "https://api.clashofclans.com/v1/players/%239lr9qy98"
 
     request = requests.get(url, headers=headers)
     response = request.json()

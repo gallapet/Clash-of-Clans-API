@@ -12,5 +12,4 @@ class Hero:
     def print_max_message(self):
         if self.is_max():
             return ". Hero maxed!"
-        else:
-            return ""
+        return ""
