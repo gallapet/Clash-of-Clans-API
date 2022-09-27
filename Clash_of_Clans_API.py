@@ -8,16 +8,28 @@ headers = {
     "Accept": "application/json",
     "authorization": f"{auth.read()}"
 }
+def main():
+    # 9LR9QY98 || LC22V09C9 || 2VPGP0LV
+    try:
+        player_tag = sys.argv[1]
+    except IndexError:
+        print("Please provide a player tag")
+        print("usage:")
+        print("./Clash_of_Clans_API.py <player_tag>")
+        sys.exit()
 
-# 9LR9QY98 || LC22V09C9 || 2VPGP0LV
-player_tag = sys.argv[1]
+    try:
+        return account_information(player_tag)
+    except TypeError:
+        print(f"Invalid player tag provided: {player_tag}")
+        sys.exit()
 
-def print_player_info():
+def print_player_info(result):
     print("Hello " + result.get("player_name") + "!")
     print("Your Town Hall Level is " + result.get("th_level"))
     print("")
 
-def print_player_heroes():
+def print_player_heroes(result):
     heroes_list = result.get("player_heroes")
     if len(heroes_list) == 0:
         print("You do not have any heroes! Upgrade to  TH7 to unlock the Barbarian King!")
@@ -33,7 +45,7 @@ def print_player_heroes():
         print("Your " + heroes_list[i].name + " is currently Level " + str(heroes_list[i].level) + heroes_list[i].print_max_message())
     print("")
 
-def print_player_pets():
+def print_player_pets(result):
     if len(result.get("pet_levels")) == 0:
         print("You currently have no pets, upgrade to TH14 to unlock!")
     else:
@@ -41,23 +53,27 @@ def print_player_pets():
         for j in range(len(result.get("pet_levels"))):
             print("Your " + result.get("pet_names")[j] + " is currently Level " + result.get("pet_levels")[j])
 
-def print_output():
+def print_output(result):
     print('==========================================================================')
-    print_player_info()
-    print_player_heroes()
-    print_player_pets()
+    print_player_info(result)
+    print_player_heroes(result)
+    print_player_pets(result)
 
 def account_information(player_tag):
     """Return info about user account"""
     url = "https://api.clashofclans.com/v1/players/%23" + player_tag
 
     api_response = requests.get(url, headers=headers)
+    if api_response.status_code != 200:
+        raise TypeError
     response_json = api_response.json()
 
     player_name = response_json.get("name")
     th_level = str(response_json.get("townHallLevel"))
     heroes_response = response_json.get("heroes")
     player_heroes = []
+
+
 
     for i in range(len(heroes_response)):
         if heroes_response[i]["village"] == "home":
@@ -83,6 +99,4 @@ def account_information(player_tag):
         "pet_names": pet_names
         }
 
-result = account_information(player_tag)
-
-print_output()
+print_output(main())
