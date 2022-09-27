@@ -1,3 +1,4 @@
+from http import HTTPStatus
 import requests
 from Hero import Hero
 import sys
@@ -20,8 +21,11 @@ def main():
 
     try:
         return account_information(player_tag)
-    except TypeError:
+    except InvalidTagError:
         print(f"Invalid player tag provided: {player_tag}")
+        sys.exit()
+    except AuthenticationError:
+        print("Not authorised")
         sys.exit()
 
 def print_player_info(result):
@@ -59,21 +63,30 @@ def print_output(result):
     print_player_heroes(result)
     print_player_pets(result)
 
+
+class InvalidTagError(ValueError):
+    pass
+
+
+class AuthenticationError(ValueError):
+    pass
+
+
 def account_information(player_tag):
     """Return info about user account"""
     url = "https://api.clashofclans.com/v1/players/%23" + player_tag
 
     api_response = requests.get(url, headers=headers)
-    if api_response.status_code != 200:
-        raise TypeError
+    if api_response.status_code == HTTPStatus.NOT_FOUND:
+        raise InvalidTagError from ValueError
+    elif api_response.status_code == HTTPStatus.FORBIDDEN:
+        raise AuthenticationError from ValueError
     response_json = api_response.json()
 
     player_name = response_json.get("name")
     th_level = str(response_json.get("townHallLevel"))
     heroes_response = response_json.get("heroes")
     player_heroes = []
-
-
 
     for i in range(len(heroes_response)):
         if heroes_response[i]["village"] == "home":
