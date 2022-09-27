@@ -1,5 +1,6 @@
 import requests
 from Hero import Hero
+import sys
 
 auth = open("auth.txt", "r")
 
@@ -7,6 +8,9 @@ headers = {
     "Accept": "application/json",
     "authorization": f"{auth.read()}"
 }
+
+# 9LR9QY98 || LC22V09C9 || 2VPGP0LV
+player_tag = sys.argv[1]
 
 def print_player_info():
     print("Hello " + result.get("player_name") + "!")
@@ -43,17 +47,16 @@ def print_output():
     print_player_heroes()
     print_player_pets()
 
-def account_information():
+def account_information(player_tag):
     """Return info about user account"""
-    # player_tag = input("Enter your player tag (without the #, not case sensitive): ").upper() #"LC22V09C9" #"9LR9QY98"  #
-    url = "https://api.clashofclans.com/v1/players/%239lr9qy98"
+    url = "https://api.clashofclans.com/v1/players/%23" + player_tag
 
-    request = requests.get(url, headers=headers)
-    response = request.json()
+    api_response = requests.get(url, headers=headers)
+    response_json = api_response.json()
 
-    player_name = response.get("name")
-    th_level = str(response.get("townHallLevel"))
-    heroes_response = response.get("heroes")
+    player_name = response_json.get("name")
+    th_level = str(response_json.get("townHallLevel"))
+    heroes_response = response_json.get("heroes")
     player_heroes = []
 
     for i in range(len(heroes_response)):
@@ -63,16 +66,15 @@ def account_information():
                     heroes_response[i]["name"],
                     heroes_response[i]["level"],
                     heroes_response[i]["maxLevel"],
-                    heroes_response[i]["village"]
                 )
             )
 
     pet_names = ["L.A.S.S.I", "Mighty Yak", "Electro Owl", "Unicorn"]
     pet_levels = []
-    for j in range(len(response.get("troops"))):
-        if response.get("troops")[j].get("name") in pet_names:
-            pet_levels.append(str(response.get("troops")[j].get("level")))
-    
+    for j in range(len(response_json.get("troops"))):
+        if response_json.get("troops")[j].get("name") in pet_names:
+            pet_levels.append(str(response_json.get("troops")[j].get("level")))
+
     return {
         "player_name": player_name,
         "th_level": th_level,
@@ -81,6 +83,6 @@ def account_information():
         "pet_names": pet_names
         }
 
-result = account_information()
+result = account_information(player_tag)
 
 print_output()
