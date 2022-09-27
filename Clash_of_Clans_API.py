@@ -3,6 +3,12 @@ import requests
 from Hero import Hero
 import sys
 
+class InvalidTagError(ValueError):
+    pass
+
+class AuthenticationError(ValueError):
+    pass
+
 auth = open("auth.txt", "r")
 
 headers = {
@@ -25,7 +31,7 @@ def main():
         print(f"Invalid player tag provided: {player_tag}")
         sys.exit()
     except AuthenticationError:
-        print("Not authorised")
+        print("Error within authorization key")
         sys.exit()
 
 def print_player_info(result):
@@ -62,15 +68,6 @@ def print_output(result):
     print_player_info(result)
     print_player_heroes(result)
     print_player_pets(result)
-
-
-class InvalidTagError(ValueError):
-    pass
-
-
-class AuthenticationError(ValueError):
-    pass
-
 
 def account_information(player_tag):
     """Return info about user account"""
