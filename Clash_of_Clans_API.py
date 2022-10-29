@@ -84,8 +84,7 @@ def print_player_heroes(response):
     else:
         print("You have 4 heroes!")
     for hero in range(len(player_heroes)):
-        print(
-            f"Your {player_heroes[hero].name} is currently Level {player_heroes[hero].level}{player_heroes[hero].print_max_message()}")
+        print(f"Your {player_heroes[hero].name} is currently Level {player_heroes[hero].level}{player_heroes[hero].print_max_message()}")
 
 
 def print_player_pets(response):
