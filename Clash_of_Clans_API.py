@@ -95,7 +95,7 @@ def account_information(player_tag):
                 )
             )
 
-    pet_names = ["L.A.S.S.I", "Mighty Yak", "Electro Owl", "Unicorn"]
+    pet_names = ["L.A.S.S.I", "Mighty Yak", "Electro Owl", "Unicorn", "Diggy", "Frosty", "Poison Lizard", "Phoenix"]
     pet_levels = []
     for j in range(len(response_json.get("troops"))):
         if response_json.get("troops")[j].get("name") in pet_names:
