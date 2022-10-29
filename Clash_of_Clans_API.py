@@ -1,8 +1,10 @@
+import sys
 from http import HTTPStatus
+
 import requests
+
 from Hero import Hero
 from troop import Troop
-import sys
 
 
 class InvalidTagError(ValueError):
@@ -40,10 +42,13 @@ def main():
         print("Error within authorization key")
         sys.exit()
 
-    print("================================================")
+    print_lines()
     print_player_info(response)
+    print_lines()
     print_player_heroes(response)
+    print_lines()
     print_player_pets(response)
+    print_lines()
 
 
 def print_player_info(response):
@@ -52,7 +57,6 @@ def print_player_info(response):
 
     print(f"Hello {player_name}!")
     print(f"Your Town Hall Level is {town_hall_level}")
-    print("")
 
 
 def print_player_heroes(response):
@@ -81,8 +85,7 @@ def print_player_heroes(response):
         print("You have 4 heroes!")
     for hero in range(len(player_heroes)):
         print(
-            f"Your {player_heroes[hero].name} is currently Level {player_heroes[hero].level} {player_heroes[hero].print_max_message()}")
-    print("")
+            f"Your {player_heroes[hero].name} is currently Level {player_heroes[hero].level}{player_heroes[hero].print_max_message()}")
 
 
 def print_player_pets(response):
@@ -123,6 +126,10 @@ def account_information(player_tag):
     response_json = api_response.json()
 
     return response_json
+
+
+def print_lines():
+    print("===================================================================================")
 
 
 if __name__ == "__main__":
