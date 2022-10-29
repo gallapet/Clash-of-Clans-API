@@ -1,13 +1,17 @@
 from http import HTTPStatus
 import requests
 from Hero import Hero
+from troop import Troop
 import sys
+
 
 class InvalidTagError(ValueError):
     pass
 
+
 class AuthenticationError(ValueError):
     pass
+
 
 auth = open("auth.txt", "r")
 
@@ -15,6 +19,8 @@ headers = {
     "Accept": "application/json",
     "authorization": f"{auth.read()}"
 }
+
+
 def main():
     # 9LR9QY98 || LC22V09C9 || 2VPGP0LV
     try:
@@ -26,7 +32,7 @@ def main():
         sys.exit()
 
     try:
-        return account_information(player_tag)
+        response = account_information(player_tag)
     except InvalidTagError:
         print(f"Invalid player tag provided: {player_tag}")
         sys.exit()
@@ -34,40 +40,76 @@ def main():
         print("Error within authorization key")
         sys.exit()
 
-def print_player_info(result):
-    print("Hello " + result.get("player_name") + "!")
-    print("Your Town Hall Level is " + result.get("th_level"))
+    print("================================================")
+    print_player_info(response)
+    print_player_heroes(response)
+    print_player_pets(response)
+
+
+def print_player_info(response):
+    player_name = response.get("name")
+    town_hall_level = response.get("townHallLevel")
+
+    print(f"Hello {player_name}!")
+    print(f"Your Town Hall Level is {town_hall_level}")
     print("")
 
-def print_player_heroes(result):
-    heroes_list = result.get("player_heroes")
-    if len(heroes_list) == 0:
+
+def print_player_heroes(response):
+    heroes_response = response.get("heroes")
+    player_heroes = []
+
+    for hero in heroes_response:
+        if hero["village"] == "home":
+            player_heroes.append(
+                Hero(
+                    hero["name"],
+                    hero["level"],
+                    hero["maxLevel"],
+                )
+            )
+
+    if len(player_heroes) == 0:
         print("You do not have any heroes! Upgrade to  TH7 to unlock the Barbarian King!")
-    elif len(heroes_list) == 1:
+    elif len(player_heroes) == 1:
         print("You have 1 hero! Upgrade to TH9 to unlock the Archer Queen!")
-    elif len(heroes_list) == 2:
+    elif len(player_heroes) == 2:
         print("You have 2 heroes! Upgrade to TH11 to unlock the Grand Warden!")
-    elif len(heroes_list) == 3:
+    elif len(player_heroes) == 3:
         print("You have 3 heroes! Upgrade to TH13 to unlock the Royal Champion!")
     else:
         print("You have 4 heroes!")
-    for i in range(len(heroes_list)):
-        print("Your " + heroes_list[i].name + " is currently Level " + str(heroes_list[i].level) + heroes_list[i].print_max_message())
+    for hero in range(len(player_heroes)):
+        print(
+            f"Your {player_heroes[hero].name} is currently Level {player_heroes[hero].level} {player_heroes[hero].print_max_message()}")
     print("")
 
-def print_player_pets(result):
-    if len(result.get("pet_levels")) == 0:
+
+def print_player_pets(response):
+    troops_response = response.get("troops")
+    pet_names = ["L.A.S.S.I", "Mighty Yak", "Electro Owl", "Unicorn", "Diggy", "Frosty", "Poison Lizard", "Phoenix"]
+    troops = []
+    for troop in troops_response:
+        if troop["name"] in pet_names:
+            troops.append(
+                Troop(
+                    name=troop["name"],
+                    level=troop["level"]
+                )
+            )
+
+    pet_list = []
+    for pet in troops:
+        if pet.name in pet_names:
+            pet_list.append(pet)
+
+    if len(pet_list) == 0:
         print("You currently have no pets, upgrade to TH14 to unlock!")
     else:
-        print("You also have " + str(len(result.get("pet_levels"))) + " pets.")
-        for j in range(len(result.get("pet_levels"))):
-            print("Your " + result.get("pet_names")[j] + " is currently Level " + result.get("pet_levels")[j])
+        print(f"You also have {len(pet_list)} pets.")
+        for pet in pet_list:
+            print(f"Your {pet.name} is currently Level {pet.level}")
 
-def print_output(result):
-    print('==========================================================================')
-    print_player_info(result)
-    print_player_heroes(result)
-    print_player_pets(result)
 
 def account_information(player_tag):
     """Return info about user account"""
@@ -80,33 +122,8 @@ def account_information(player_tag):
         raise AuthenticationError from ValueError
     response_json = api_response.json()
 
-    player_name = response_json.get("name")
-    th_level = str(response_json.get("townHallLevel"))
-    heroes_response = response_json.get("heroes")
-    player_heroes = []
+    return response_json
 
-    for i in range(len(heroes_response)):
-        if heroes_response[i]["village"] == "home":
-            player_heroes.append(
-                Hero(
-                    heroes_response[i]["name"],
-                    heroes_response[i]["level"],
-                    heroes_response[i]["maxLevel"],
-                )
-            )
 
-    pet_names = ["L.A.S.S.I", "Mighty Yak", "Electro Owl", "Unicorn", "Diggy", "Frosty", "Poison Lizard", "Phoenix"]
-    pet_levels = []
-    for j in range(len(response_json.get("troops"))):
-        if response_json.get("troops")[j].get("name") in pet_names:
-            pet_levels.append(str(response_json.get("troops")[j].get("level")))
-
-    return {
-        "player_name": player_name,
-        "th_level": th_level,
-        "player_heroes": player_heroes,
-        "pet_levels": pet_levels,
-        "pet_names": pet_names
-        }
-
-print_output(main())
+if __name__ == "__main__":
+    main()
