@@ -1,27 +1,15 @@
 import sys
 from http import HTTPStatus
-
 import requests
 
 from Hero import Hero
 from troop import Troop
 
-
 class InvalidTagError(ValueError):
     pass
 
-
 class AuthenticationError(ValueError):
     pass
-
-
-auth = open("auth.txt", "r")
-
-headers = {
-    "Accept": "application/json",
-    "authorization": f"{auth.read()}"
-}
-
 
 def main():
     # 9LR9QY98 || LC22V09C9 || 2VPGP0LV
@@ -100,11 +88,10 @@ def print_player_pets(response):
                 )
             )
 
-    pet_list = []
+    pet_list = [None] * len(troops)
     for pet in troops:
         if pet.name in pet_names:
-            pet_list.append(pet)
-
+            pet_list[pet_names.index(pet.name)] = pet
     if len(pet_list) == 0:
         print("You currently have no pets, upgrade to TH14 to unlock!")
     else:
@@ -115,6 +102,12 @@ def print_player_pets(response):
 
 def account_information(player_tag):
     """Return info about user account"""
+    auth = open("auth.txt", "r")
+    headers = {
+        "Accept": "application/json",
+        "authorization": f"{auth.read()}"
+    }
+
     url = "https://api.clashofclans.com/v1/players/%23" + player_tag
 
     api_response = requests.get(url, headers=headers)
