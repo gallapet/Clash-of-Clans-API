@@ -2,8 +2,8 @@ import sys
 from http import HTTPStatus
 import requests
 
-from Hero import Hero
-from troop import Troop
+from Player_Special.Hero import Hero
+from Player_Special.Troop import Troop
 
 class InvalidTagError(ValueError):
     pass
@@ -76,7 +76,7 @@ def print_player_heroes(response):
 
 def print_player_pets(response):
     troops_response = response.get("troops")
-    pet_names = ["L.A.S.S.I", "Mighty Yak", "Electro Owl", "Unicorn", "Diggy", "Frosty", "Poison Lizard", "Phoenix"]
+    pet_names = ["L.A.S.S.I", "Electro Owl", "Mighty Yak", "Unicorn", "Frosty", "Diggy", "Poison Lizard", "Phoenix"]
     troops = []
     for troop in troops_response:
         if troop["name"] in pet_names:
