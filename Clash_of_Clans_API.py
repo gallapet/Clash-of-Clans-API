@@ -12,7 +12,6 @@ class AuthenticationError(ValueError):
     pass
 
 def main():
-    # 9LR9QY98 || LC22V09C9 || 2VPGP0LV
     try:
         player_tag = sys.argv[1]
     except IndexError:
