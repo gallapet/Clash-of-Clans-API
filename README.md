@@ -3,9 +3,9 @@
 Program that accepts a PlayerID as an argument and returns information about the player's heroes and pets
 
 ## Usage: 
-`.\Clash_of_Clans_API.py <PlayerID>`
+`.\coc_api.py <PlayerID>`
 
-## Example output: 
+## Sample output: 
 ```
 ===================================================================================
 Hello <username>
