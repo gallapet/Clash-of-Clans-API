@@ -1,6 +1,6 @@
-import coc_api as ca
-import unittest
 import json
+import unittest
+import coc_api as ca
 
 r = open("../response.json")
 test_resp = json.load(r)

@@ -66,19 +66,12 @@ def print_player_info(response):
     print(f"Hello {get_player_name(response)}!")
     print(f"Your current Town Hall Level is {get_town_hall_level(response)}")
 
-def print_player_heroes(response):
-    heroes_response = response.get("heroes")
-    player_heroes = []
+def get_player_heroes(response):
+    return [Hero(hero["name"], hero["level"], hero["maxLevel"])
+            for hero in response.get("heroes") if hero["village"] == "home"]
 
-    for hero in heroes_response:
-        if hero["village"] == "home":
-            player_heroes.append(
-                Hero(
-                    hero["name"],
-                    hero["level"],
-                    hero["maxLevel"],
-                )
-            )
+def print_player_heroes(response):
+    player_heroes = get_player_heroes(response)
 
     if len(player_heroes) == 0:
         print("You do not have any heroes! Upgrade to  TH7 to unlock the Barbarian King!")
@@ -92,7 +85,6 @@ def print_player_heroes(response):
         print("You have 4 heroes!")
     for hero in range(len(player_heroes)):
         print(f"Your {player_heroes[hero].name} is currently Level {player_heroes[hero].level}{player_heroes[hero].print_max_message()}")
-
 
 def print_player_pets(response):
     troops_response = response.get("troops")
@@ -122,7 +114,6 @@ def print_player_pets(response):
 
 def print_lines():
     print("===================================================================================")
-
 
 if __name__ == "__main__":
     main()
