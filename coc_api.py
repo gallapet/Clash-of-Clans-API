@@ -17,7 +17,7 @@ def main():
     except IndexError:
         print("Please provide a player tag")
         print("usage:")
-        print("./Clash_of_Clans_API.py <player_tag>")
+        print("./coc_api.py <player_tag>")
         sys.exit()
 
     try:
@@ -37,14 +37,34 @@ def main():
     print_player_pets(response)
     print_lines()
 
+def account_information(player_tag):
+    """Return info about user account"""
+    auth = open("auth.txt", "r")
+    headers = {
+        "Accept": "application/json",
+        "authorization": f"{auth.read()}"
+    }
+
+    url = "https://api.clashofclans.com/v1/players/%23" + player_tag
+
+    api_response = requests.get(url, headers=headers)
+    if api_response.status_code == HTTPStatus.NOT_FOUND:
+        raise InvalidTagError from ValueError
+    elif api_response.status_code == HTTPStatus.FORBIDDEN:
+        raise AuthenticationError from ValueError
+    response_json = api_response.json()
+
+    return response_json
+
+def get_player_name(response):
+    return response.get("name")
+
+def get_town_hall_level(response):
+    return response.get("townHallLevel")
 
 def print_player_info(response):
-    player_name = response.get("name")
-    town_hall_level = response.get("townHallLevel")
-
-    print(f"Hello {player_name}!")
-    print(f"Your Town Hall Level is {town_hall_level}")
-
+    print(f"Hello {get_player_name(response)}!")
+    print(f"Your current Town Hall Level is {get_town_hall_level(response)}")
 
 def print_player_heroes(response):
     heroes_response = response.get("heroes")
@@ -76,7 +96,9 @@ def print_player_heroes(response):
 
 def print_player_pets(response):
     troops_response = response.get("troops")
-    pet_names = ["L.A.S.S.I", "Electro Owl", "Mighty Yak", "Unicorn", "Frosty", "Diggy", "Poison Lizard", "Phoenix"]
+    pet_names = ["L.A.S.S.I", "Electro Owl", "Mighty Yak", "Unicorn",
+                 "Frosty", "Diggy", "Poison Lizard", "Phoenix",
+                 "Spirit Fox", "Angry Jelly"]
     troops = []
     for troop in troops_response:
         if troop["name"] in pet_names:
@@ -97,27 +119,6 @@ def print_player_pets(response):
         print(f"You also have {len(pet_list)} pets.")
         for pet in pet_list:
             print(f"Your {pet.name} is currently Level {pet.level}")
-
-
-def account_information(player_tag):
-    """Return info about user account"""
-    auth = open("auth.txt", "r")
-    headers = {
-        "Accept": "application/json",
-        "authorization": f"{auth.read()}"
-    }
-
-    url = "https://api.clashofclans.com/v1/players/%23" + player_tag
-
-    api_response = requests.get(url, headers=headers)
-    if api_response.status_code == HTTPStatus.NOT_FOUND:
-        raise InvalidTagError from ValueError
-    elif api_response.status_code == HTTPStatus.FORBIDDEN:
-        raise AuthenticationError from ValueError
-    response_json = api_response.json()
-
-    return response_json
-
 
 def print_lines():
     print("===================================================================================")
